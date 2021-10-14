@@ -19,6 +19,6 @@ export class CoreResolver {
     name: 'input',
     type: () => User,
   }) input: User): Promise<User> {
-    return this.service.create(input);
+    return this.service.createUser(input);
   }
 }

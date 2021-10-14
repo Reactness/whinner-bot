@@ -11,17 +11,20 @@ generator client {
 }
 
 model User {
-  id        Int       @unique
+  id        Int        @id @default(autoincrement())
   firstName String?
   lastName  String?
-  userName  String
-  createdAt DateTime  @default(now())
-  Message   Message[]
+  userName  String @unique
+  createdAt DateTime   @default(now())
+  message  Message[]
 }
 
 model Message {
-  id      Int     @id
-  User    User?   @relation(fields: [userId], references: [id])
-  userId  Int?
+  id Int @id @default(autoincrement())
+  User   User?    @relation(fields: [user], references: [userName])
+  user String?
   message String?
+  response String?
 }
+
+
