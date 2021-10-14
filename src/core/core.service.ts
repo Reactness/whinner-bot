@@ -14,7 +14,13 @@ export class CoreService {
   }
 
   async createUser(input: User): Promise<User> {
-    return await this.prisma.user.create({data: input});
+    const existing = await this.prisma.user.findUnique({
+      where: {
+        id: input.id
+      }
+    })
+    if (existing) return
+    await this.prisma.user.create({data: input});
   }
 
   async processMessage(user: TelegramUser, message: string, response: string): Promise<void> {
