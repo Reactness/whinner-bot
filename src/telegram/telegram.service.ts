@@ -4,17 +4,26 @@ import { Context } from "telegraf";
 import { SchedulerRegistry } from "@nestjs/schedule";
 import { CronJob } from "cron";
 import { stringSimilarity } from "string-similarity-js";
+import { CoreService } from "../core/core.service";
 
 @Injectable()
 @Update()
 export class TelegramService {
   private readonly logger = new Logger('Telegram');
-  constructor(private schedulerRegistry: SchedulerRegistry) {
+  constructor(private schedulerRegistry: SchedulerRegistry,
+              private coreService: CoreService) {
   }
 
   @Start()
   async sendScheduled(ctx: Context): Promise<void> {
     const user = ctx.from
+    await this.coreService.create({
+      id: user.id,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      userName: user.username,
+      createdAt: new Date(),
+    })
     const message = `Шось не нравиця?`
     const jobName = `MessageFor${user.username}`
     const job = new CronJob(` 00 12 * * 0-6`,  async () => {
