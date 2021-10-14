@@ -61,7 +61,7 @@ export class TelegramService {
     if (similarity1 > 0.6 && similarity1 > similarity2) {
       response = (await ctx.reply(responseMessage)).text
     }
-    if (similarity2 > 0.8 && similarity2 > similarity1) {
+    if (similarity2 > 0.6 && similarity2 > similarity1) {
       response = (await ctx.reply('А шо?')).text
     }
     if (similarity3) {
