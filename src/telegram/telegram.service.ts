@@ -30,9 +30,9 @@ export class TelegramService {
     })
     const message = `Шось не нравиця?`
     const jobName = `MessageFor${user.username}`
-    const job = new CronJob(` 00 12 * * 0-6`,  async () => {
+    const job = new CronJob(` 00 12 * * 0-6`, async () => {
       await ctx.reply(message)
-    },  async () => {
+    }, async () => {
       this.logger.log(`Sent scheduled message at ${job.nextDate()}`)
     }, undefined, 'Europe/Moscow');
     const exists = this.schedulerRegistry.doesExists('cron', jobName)
@@ -40,10 +40,14 @@ export class TelegramService {
     if (exists) {
       this.schedulerRegistry.deleteCronJob(jobName);
     }
+    try {
       this.schedulerRegistry.addCronJob(jobName, job);
-      job.start();
-      this.logger.log(`Scheduled message at ${job.nextDate()}`)
-      return
+    job.start();
+    this.logger.log(`Scheduled message at ${job.nextDate()}`)
+    return
+    } catch (e) {
+      this.logger.error(e)
+    }
   }
 
   @On('message')
