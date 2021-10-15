@@ -29,7 +29,7 @@ export class TelegramService {
         userName: user.username,
         createdAt: new Date(),
       })
-      const message = `Шось не нравиця?`
+      const message = `Шо не нравиця?`
       const jobName = `MessageFor${user.username}`
       const job = new CronJob(` 00 12 * * 0-6`, async () => {
         await ctx.reply(message)
