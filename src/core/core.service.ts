@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { User } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
-import { User as TelegramUser } from 'typegram';
+import { User as TelegramUser } from "typegram";
 
 
 @Injectable()
@@ -45,6 +45,6 @@ export class CoreService {
         chatId: true
       }
     });
-    return Object.keys(chats);
+    return chats.map(chat => chat.chatId);
   }
 }

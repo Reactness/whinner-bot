@@ -36,6 +36,7 @@ export class TelegramService {
     try {
       const user = ctx.from
       const chat: string = ctx.chat.id.toString();
+      const initial = 'Шо не нравиця?'
       await this.coreService.createUser({
         id: user.id,
         firstName: user.first_name,
@@ -44,22 +45,7 @@ export class TelegramService {
         createdAt: new Date(),
         chatId: chat,
       })
-    //   const message = `Шо не нравиця?`
-    //   const jobName = `MessageFor${user.username}`
-    //   const job = new CronJob(` 00 12 * * 0-6`, async () => {
-    //     await ctx.reply(message)
-    //   }, async () => {
-    //     this.logger.log(`Sent scheduled message at ${job.nextDate()}`)
-    //   }, undefined, 'Europe/Moscow');
-    //   const exists = this.schedulerRegistry.doesExists('cron', jobName)
-    //   await ctx.reply(message)
-    //   if (exists) {
-    //     this.schedulerRegistry.deleteCronJob(jobName);
-    //   }
-    //   this.schedulerRegistry.addCronJob(jobName, job);
-    //   job.start();
-    //   this.logger.log(`Scheduled message at ${job.nextDate()}`)
-    //   return
+      await ctx.reply(initial);
     } catch (e) {
       this.logger.error(e)
     }
@@ -71,10 +57,10 @@ export class TelegramService {
     try {
       // @ts-ignore
       const message = ctx.message?.text;
-      if (message) {
-      let response: string
-      const initial = 'Шо не нравиця?'
       const user = ctx.from
+      let response: string
+      if (message) {
+      const initial = 'Шо не нравиця?'
       const responseMessage = `Ну шось не нравиця`
       const similarity1 = stringSimilarity(message, initial)
       const similarity2 = stringSimilarity(message, responseMessage)
@@ -113,8 +99,10 @@ export class TelegramService {
       if (!response) {
         response = (await ctx.reply('Ладно')).text
       }
+    } else {
+        response = (await ctx.reply('Ладно')).text
+      }
       await this.coreService.processMessage(user, message, response);
-    } else return
     }
     catch (e) {
       this.logger.error(e)
