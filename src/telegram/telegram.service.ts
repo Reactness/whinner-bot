@@ -1,8 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectBot, On, Start, Update } from "nestjs-telegraf";
 import { Context, Scenes, Telegraf } from "telegraf";
-import { SchedulerRegistry } from "@nestjs/schedule";
-import { CronJob } from "cron";
+import { Cron, CronExpression, SchedulerRegistry } from "@nestjs/schedule";
 import { stringSimilarity } from "string-similarity-js";
 import { CoreService } from "../core/core.service";
 
@@ -18,37 +17,54 @@ export class TelegramService {
               @InjectBot() private bot: Telegraf<TelegrafContext>) {
   }
 
+
+  @Cron(CronExpression.EVERY_DAY_AT_NOON)
+  async sendScheduled(): Promise<void> {
+    try {
+      const chats = await this.coreService.getChats();
+      const message = `Шо не нравиця?`
+      for (const chat of chats) {
+        await this.bot.telegram.sendMessage(chat, message);
+      }
+    } catch (e) {
+      this.logger.error(e)
+    }
+  }
+
   @Start()
-  async sendScheduled(ctx: Context): Promise<void> {
+  async start(ctx: Context): Promise<void> {
     try {
       const user = ctx.from
+      const chat: string = ctx.chat.id.toString();
       await this.coreService.createUser({
         id: user.id,
         firstName: user.first_name,
         lastName: user.last_name,
         userName: user.username,
         createdAt: new Date(),
+        chatId: chat,
       })
-      const message = `Шо не нравиця?`
-      const jobName = `MessageFor${user.username}`
-      const job = new CronJob(` 00 12 * * 0-6`, async () => {
-        await ctx.reply(message)
-      }, async () => {
-        this.logger.log(`Sent scheduled message at ${job.nextDate()}`)
-      }, undefined, 'Europe/Moscow');
-      const exists = this.schedulerRegistry.doesExists('cron', jobName)
-      await ctx.reply(message)
-      if (exists) {
-        this.schedulerRegistry.deleteCronJob(jobName);
-      }
-      this.schedulerRegistry.addCronJob(jobName, job);
-      job.start();
-      this.logger.log(`Scheduled message at ${job.nextDate()}`)
-      return
+    //   const message = `Шо не нравиця?`
+    //   const jobName = `MessageFor${user.username}`
+    //   const job = new CronJob(` 00 12 * * 0-6`, async () => {
+    //     await ctx.reply(message)
+    //   }, async () => {
+    //     this.logger.log(`Sent scheduled message at ${job.nextDate()}`)
+    //   }, undefined, 'Europe/Moscow');
+    //   const exists = this.schedulerRegistry.doesExists('cron', jobName)
+    //   await ctx.reply(message)
+    //   if (exists) {
+    //     this.schedulerRegistry.deleteCronJob(jobName);
+    //   }
+    //   this.schedulerRegistry.addCronJob(jobName, job);
+    //   job.start();
+    //   this.logger.log(`Scheduled message at ${job.nextDate()}`)
+    //   return
     } catch (e) {
       this.logger.error(e)
     }
   }
+
 
   @On('message')
   async onMessage(ctx: Context) {

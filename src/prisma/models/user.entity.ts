@@ -15,6 +15,9 @@ export class User {
   @Field(() => String, {nullable: true})
   userName: string
 
+  @Field(() => String, {nullable: true})
+  chatId: string
+
   @Field(() => Date, {nullable: true})
   createdAt: Date;
 }
