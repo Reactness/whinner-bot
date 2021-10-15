@@ -38,4 +38,13 @@ export class CoreService {
       }
     })
   }
+
+  async getChats(): Promise<string[]> {
+    const chats = await this.prisma.user.findMany({
+      select: {
+        chatId: true
+      }
+    });
+    return Object.keys(chats);
+  }
 }

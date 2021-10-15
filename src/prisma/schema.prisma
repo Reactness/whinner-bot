@@ -17,6 +17,7 @@ model User {
   userName  String @unique
   createdAt DateTime   @default(now())
   message  Message[]
+  chatId String?
 }
 
 model Message {
