@@ -15,7 +15,7 @@ model User {
   telegramId        Int? @unique
   firstName String?
   lastName  String?
-  userName  String? @unique
+  userName  String?
   createdAt DateTime   @default(now())
   message  Message[]
   chatId String?
