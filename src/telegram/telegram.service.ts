@@ -18,7 +18,9 @@ export class TelegramService {
   }
 
 
-  @Cron(CronExpression.EVERY_DAY_AT_NOON)
+  @Cron(CronExpression.EVERY_DAY_AT_NOON, {
+    timeZone: 'Europe/Kiev'
+  })
   async sendScheduled(): Promise<void> {
     try {
       const chats = await this.coreService.getChats();
