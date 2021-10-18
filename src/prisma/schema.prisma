@@ -11,10 +11,11 @@ generator client {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+  telegramId        Int? @unique
   firstName String?
   lastName  String?
-  userName  String @unique
+  userName  String? @unique
   createdAt DateTime   @default(now())
   message  Message[]
   chatId String?
@@ -22,8 +23,8 @@ model User {
 
 model Message {
   id Int @id @default(autoincrement())
-  User   User?    @relation(fields: [user], references: [userName])
-  user String?
+  User   User?    @relation(fields: [user], references: [id])
+  user Int?
   message String?
   response String?
 }

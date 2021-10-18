@@ -40,7 +40,7 @@ export class TelegramService {
       const chat: string = ctx.chat.id.toString();
       const initial = 'Шо не нравиця?'
       await this.coreService.createUser({
-        id: user.id,
+        telegramId: user.id,
         firstName: user.first_name,
         lastName: user.last_name,
         userName: user.username,

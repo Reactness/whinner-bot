@@ -1,22 +1,25 @@
-import { Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { Field, ID, InputType, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 @InputType('UserInput')
 export class User {
-  @Field(() => Int)
-  id: number
+  @Field(() => ID)
+  id?: number
+
+  @Field(() => Int, {nullable: true})
+  telegramId?: number
 
   @Field(() => String,{nullable: true})
-  firstName: string
+  firstName?: string
 
   @Field(() => String, {nullable: true})
-  lastName: string
+  lastName?: string
 
   @Field(() => String, {nullable: true})
-  userName: string
+  userName?: string
 
   @Field(() => String, {nullable: true})
-  chatId: string
+  chatId?: string
 
   @Field(() => Date, {nullable: true})
   createdAt: Date;

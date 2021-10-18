@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { User as TelegramUser } from "typegram";
+import { User } from "../prisma/models";
 
 
 @Injectable()
@@ -14,19 +14,21 @@ export class CoreService {
   }
 
   async createUser(input: User): Promise<User> {
-    const existing = await this.prisma.user.findUnique({
+    return await this.prisma.user.upsert({
+      update: input,
+      create: input,
       where: {
-        id: input.id
+        telegramId: input.telegramId
       }
-    })
-    if (existing) return
-    await this.prisma.user.create({data: input});
-  }
+      }
+    )
+    }
+
 
   async processMessage(user: TelegramUser, message: string, response: string): Promise<void> {
     await this.prisma.user.update({
       where: {
-        userName: user.username
+        telegramId: user.id
       },
       data: {
         message: {
